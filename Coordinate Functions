@@ -1,0 +1,37 @@
+public JSONObject getElementAt(int x, int y) {
+        for (int i = 0; i < everything.length(); i++) {
+            try {
+                if ((getX(everything.getJSONObject(i)) == x) && (getY(everything.getJSONObject(i)) == y)) {
+                    return everything.getJSONObject(i);
+                }
+            } catch (Exception e) {
+            }
+        }
+        return null;
+    }
+
+public int getLargestX() {
+    int largest = 0;
+    for (int i = 0; i < everything.length(); i++) {
+        try {
+            if ((getX(everything.getJSONObject(i)) > largest)) {
+                largest = getX(everything.getJSONObject(i));
+            }
+        } catch (Exception e) {
+        }
+    }
+    return largest;
+}
+
+public int getLargestY() {
+    int largest = 0;
+    for (int i = 0; i < everything.length(); i++) {
+        try {
+            if ((getY(everything.getJSONObject(i)) > largest)) {
+                largest = getY(everything.getJSONObject(i));
+            }
+        } catch (Exception e) {
+        }
+    }
+    return largest;
+}
