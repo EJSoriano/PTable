@@ -1,37 +1,40 @@
-public JSONObject getElementAt(int x, int y) {
-        for (int i = 0; i < everything.length(); i++) {
-            try {
-                if ((getX(everything.getJSONObject(i)) == x) && (getY(everything.getJSONObject(i)) == y)) {
-                    return everything.getJSONObject(i);
+    public JSONObject getElementAt(int x, int y) {
+        try {
+            for (int i = 0; i < everything.length(); i++) {
+                JSONObject element = everything.getJSONObject(i);
+                if ((getX(element) == x) && (getY(element) == y)) {
+                    return element;
                 }
-            } catch (Exception e) {
             }
+        } catch (Exception e) {
         }
         return null;
     }
 
-public int getLargestX() {
-    int largest = 0;
-    for (int i = 0; i < everything.length(); i++) {
+    public int getLargestX() {
+        int largest = 0;
         try {
-            if ((getX(everything.getJSONObject(i)) > largest)) {
-                largest = getX(everything.getJSONObject(i));
+            for (int i = 0; i < everything.length(); i++) {
+                JSONObject element = everything.getJSONObject(i);
+                if ((getX(element) > largest)) {
+                    largest = getX(element);
+                }
             }
         } catch (Exception e) {
         }
+        return largest;
     }
-    return largest;
-}
 
-public int getLargestY() {
-    int largest = 0;
-    for (int i = 0; i < everything.length(); i++) {
+    public int getLargestY() {
+        int largest = 0;
         try {
-            if ((getY(everything.getJSONObject(i)) > largest)) {
-                largest = getY(everything.getJSONObject(i));
+            for (int i = 0; i < everything.length(); i++) {
+                JSONObject element = everything.getJSONObject(i);
+                if ((getY(element) > largest)) {
+                    largest = getY(element);
+                }
             }
         } catch (Exception e) {
         }
+        return largest;
     }
-    return largest;
-}
