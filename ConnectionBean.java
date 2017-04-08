@@ -258,11 +258,13 @@ public class ConnectionBean implements Serializable {
             return null;
         }
     }
-
+    //Example of how to instantiate the Functionality Bean
     public static void main(String args[]) throws Exception {
         ConnectionBean cb = new ConnectionBean();
         FunctionalityBean fn = new FunctionalityBean(cb.getCon());
 
-      
+        fn.insertIsotope(160, "Isotope Test", 50, "TEST", 50, "IsoComp", "180", "");
+        
     }
 }
+
