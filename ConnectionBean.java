@@ -1,63 +1,76 @@
 package Connection;
 
 import java.io.Serializable;
-import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.sql.*;
 import java.util.*;
+
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.SessionScoped;
 
 @Named(value = "dbconnectionBean")
-@Dependent
+@SessionScoped
 public class ConnectionBean implements Serializable {
 
-    private static Connection conn;
-    private JSONArray everything = new JSONArray();
-    private ArrayList<String> elements = new ArrayList<>();
+    private Connection conn;
+    private JSONArray elementList = new JSONArray();
+    private ArrayList<Element> elements = new ArrayList<Element>();
+    private ArrayList<Isotope> isotopes = new ArrayList<Isotope>();
+    private int currRow = 0;
 
     public ConnectionBean() {
-
+        connect();
+        initializeData();
     }
 
+    //Establishes Connection
     public void connect() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://periodictable.cb2vg6rxwemx.us-west-2.rds.amazonaws.com:3306/cecs493ptable", "root", "Redbull11!");
+            conn = DriverManager.getConnection("jdbc:mysql://periodictable.cb2vg6rxwemx.us-west-2.rds.amazonaws.com:3306/cecs493ptable", "root", "Coconut12#");
             System.out.println("Database connection established...");
         } catch (Exception e) {
             System.err.println("Connection Error: " + e);
         }
     }
 
-    //Puts all of the elements into JSON objects and places them in a JSON array
-    public void JSONify() {
-        long before = 0;
-        long after = 0;
-        long total = 0;
+    //Initializes element and isotope data, construct main table. ISOTOPE DISPLAY NOT INCLUDED.
+    public void initializeData() {
+        String elemName = "";
+        String atomSymb = "";
+        String atomNum = "";
+        String mass = "";
+        String groupNum = "";
+        String period = "";
+        String state25 = "";
+        String valences = "";
+        String elecConf = "";
+        String density = "";
+        String series = "";
+        String xCor = "";
+        String yCor = "";
         try {
+
+            //Elements
             Statement select = conn.createStatement();
             ResultSet rs = select.executeQuery("call sp_getallelements()");
 
-            before = System.currentTimeMillis();
             while (rs.next()) {
-
-                String elemName = rs.getString("Elementname");
-                String atomSymb = rs.getString("AtomicSymbol");
-                String atomNum = rs.getString("AtomicNumber");
-                String mass = rs.getString("atomicmass");
-                String groupNum = rs.getString("groupnumber");
-                String period = rs.getString("Period");
-                String state25 = rs.getString("stateofmatter25");
-                String valences = rs.getString("valences");
-                String elecConf = rs.getString("configuration");
-                String density = rs.getString("Density");
-                String series = rs.getString("series");
-                String xCor = rs.getString("xCoord");
-                String yCor = rs.getString("yCoord");
+                elemName = rs.getString("Elementname");
+                atomSymb = rs.getString("AtomicSymbol");
+                atomNum = rs.getString("AtomicNumber");
+                mass = rs.getString("atomicmass");
+                groupNum = rs.getString("groupnumber");
+                period = rs.getString("Period");
+                state25 = rs.getString("stateofmatter25");
+                valences = rs.getString("valences");
+                elecConf = rs.getString("configuration");
+                density = rs.getString("Density");
+                series = rs.getString("series");
+                xCor = rs.getString("xCoord");
+                yCor = rs.getString("yCoord");
 
                 JSONObject element = new JSONObject();
                 element.put("elemName", elemName);
@@ -74,131 +87,109 @@ public class ConnectionBean implements Serializable {
                 element.put("xCor", xCor);
                 element.put("yCor", yCor);
 
-                everything.put(element);
-
+                elementList.put(element);
             }
-            after = System.currentTimeMillis();
-            total = after - before;
-            System.out.println("Time: " + total);
+
+            for (int i = 1; i <= getLargestY(); i++) {
+                for (int j = 1; j <= getLargestX(); j++) {
+                    JSONObject json = getElementAt(j, i);
+                    if (json != null) {
+                        Element el = new Element("visible", json.getString("elemName"), json.getString("atomSymb"),
+                                json.getString("atomNum"), json.getString("xCor"), json.getString("yCor"),
+                                json.getString("mass"), json.getString("groupNum"), json.getString("period"),
+                                json.getString("state25"), json.getString("valences"), json.getString("elecConf"),
+                                json.getString("density"), json.getString("series"));
+                        elements.add(el);
+                    } else {
+                        elements.add(new Element("invisible", "", "", "", "", "", "", "", "", "", "", "", "", ""));
+                    }
+                }
+            }
+
+            //Isotopes
+            Float isoAtomNum = 0f;
+            String isoName = "";
+            Float isoNum = 0f;
+            String isoSymb = "";
+            String isoMass = "";
+            String isoComp = "";
+            String isoWeight = "";
+            String isoAbundance = "";
+
+            rs = select.executeQuery("call sp_getallisotopes()");
+            while (rs.next()) {
+                isoAtomNum = rs.getFloat("Atomic Number");
+                isoName = rs.getString("IsoName");
+                isoNum = rs.getFloat("IsotopeNum");
+                isoSymb = rs.getString("Symbol");
+                isoMass = rs.getString("RelativeAtomicMass");
+                isoComp = rs.getString("Isotopic Composition");
+                isoWeight = rs.getString("Standard Atomic Weight");
+                isoAbundance = rs.getString("Abundance");
+
+                isotopes.add(new Isotope(isoAtomNum, isoName, isoNum, isoSymb, isoMass, isoComp, isoWeight, isoAbundance));
+            }
         } catch (Exception e) {
 
         }
-        System.out.println("\nData has been JSONified...\n");
+        System.out.println("\nData has been initialized...\n");
     }
 
-    public JSONArray getEverything() {
-        return everything;
+    //Returns the elements (and invisible elements) as an arraylist. 
+    public ArrayList<Element> getElements() {
+        return elements;
     }
 
-    public JSONObject getElement(int i) {
-        JSONObject elem = new JSONObject();
+    //Returns connection, used for initializing the FunctionalityBean
+    public Connection getCon() {
+        return conn;
+    }
+
+    //Gets an element at the specified coordinates as a JSONObject. Only used in InitializeData.
+    private JSONObject getElementAt(int x, int y) {
         try {
-            elem = everything.getJSONObject(i);
+            for (int i = 0; i < elementList.length(); i++) {
+                JSONObject element = elementList.getJSONObject(i);
+                if ((getX(element) == x) && (getY(element) == y)) {
+                    return element;
+                }
+            }
         } catch (Exception e) {
         }
-        return elem;
+        return null;
     }
 
-    public String getName(JSONObject jo) {
-        String value = "";
+    //Gets the largest X coordinate of any element. Only used in InitializeData and getNextRow.
+    private int getLargestX() {
+        int largest = 0;
         try {
-            value = jo.getString("elemName");
+            for (int i = 0; i < elementList.length(); i++) {
+                JSONObject element = elementList.getJSONObject(i);
+                if ((getX(element) > largest)) {
+                    largest = getX(element);
+                }
+            }
         } catch (Exception e) {
         }
-        return value;
+        return largest;
     }
 
-    public String getSymbol(JSONObject jo) {
-        String value = "";
+    //Gets the largest Y coordinate of any element. Only used in InitializeData and getNextRow.
+    private int getLargestY() {
+        int largest = 0;
         try {
-            value = jo.getString("atomSymb");
+            for (int i = 0; i < elementList.length(); i++) {
+                JSONObject element = elementList.getJSONObject(i);
+                if ((getY(element) > largest)) {
+                    largest = getY(element);
+                }
+            }
         } catch (Exception e) {
         }
-        return value;
+        return largest;
     }
 
-    public String getAtomNum(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("atomNum");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getMass(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("mass");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getGroup(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("groupNum");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getPeriod(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("period");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getDensity(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("density");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getSeries(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("series");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getState25(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("state25");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    /*
-    public String getValences(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("valences");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
-    public String getElecConf(JSONObject jo) {
-        String value = "";
-        try {
-            value = jo.getString("elecConf");
-        } catch (Exception e) {
-        }
-        return value;
-    }
-
+    //Returns the x coordinate of a JSON element. Only used in InitializeData.
     public int getX(JSONObject jo) {
         String value = "";
         int cor = 0;
@@ -209,7 +200,8 @@ public class ConnectionBean implements Serializable {
         cor = Integer.parseInt(value);
         return cor;
     }
-    
+
+    //Returns the y coordinate of a JSON element. Only used in InitializeData.
     public int getY(JSONObject jo) {
         String value = "";
         int cor = 0;
@@ -220,41 +212,57 @@ public class ConnectionBean implements Serializable {
         cor = Integer.parseInt(value);
         return cor;
     }
-     */
-    public boolean LSI(JSONObject jo) {
-        boolean indicator = false;
+
+    //Creates the next row of elements in the table display and returns it as an arraylist. 
+    public ArrayList<Element> getNextRow() {
+        if (currRow == getLargestY()) {
+            currRow = 0;
+        }
+        ArrayList<Element> el = new ArrayList<Element>();
+        for (int i = currRow * getLargestX(); i < currRow * getLargestX() + getLargestX(); i++) {
+            el.add(elements.get(i));
+        }
+        currRow++;
+        return el;
+    }
+
+    //Prints out elements to console.
+    public void displayElements() {
         try {
-            String series = jo.getString("series");
-            if (series.equalsIgnoreCase("lanthanide")) {
-                indicator = true;
+            for (int i = 0; i < elementList.length(); i++) {
+                JSONObject element = elementList.getJSONObject(i);
+                System.out.println("Element " + element.getString("elemName"));
             }
         } catch (Exception e) {
         }
-        return indicator;
     }
 
-    public boolean ASI(JSONObject jo) {
-        boolean indicator = false;
-        try {
-            String series = jo.getString("series");
-            if (series.equalsIgnoreCase("actinide")) {
-                indicator = true;
-            }
-        } catch (Exception e) {
+    //Prints out isotopes to console.
+    public void displayIsotopes() {
+        for (Isotope iso : isotopes) {
+            System.out.println(iso.getSymbol());
         }
-        return indicator;
     }
 
-    //Tester
-    public static void main(String[] args) {
-        ConnectionBean con = new ConnectionBean();
-        con.connect();
-        con.JSONify();
+    //Returns an arraylist of isotopes of the given atomic number. If no isotopes, returns null.
+    public ArrayList<Isotope> getIsotopesOfAtom(int atomNum) {
+        ArrayList<Isotope> isotopesOfAtom = new ArrayList<Isotope>();
+        for (Isotope i : isotopes) {
+            if (i.getAtomNum() == atomNum) {
+                isotopesOfAtom.add(i);
+            }
+        }
+        if (isotopesOfAtom.size() > 0) {
+            return isotopesOfAtom;
+        } else {
+            return null;
+        }
+    }
 
-        //Returns an element as a JSON Object at JSONArray[0]
-        System.out.println(con.getElement(0));
+    public static void main(String args[]) throws Exception {
+        ConnectionBean cb = new ConnectionBean();
+        FunctionalityBean fn = new FunctionalityBean(cb.getCon());
 
-        //Returns the element name of the JSON Object at JSONArray[0]
-        System.out.println(con.getName(con.getElement(0)));
+      
     }
 }
