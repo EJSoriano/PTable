@@ -29,7 +29,7 @@ public class ConnectionBean implements Serializable {
     public void connect() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://periodictable.cb2vg6rxwemx.us-west-2.rds.amazonaws.com:3306/cecs493ptable", "root", "Coconut12#");
+            conn = DriverManager.getConnection();
             System.out.println("Database connection established...");
         } catch (Exception e) {
             System.err.println("Connection Error: " + e);
