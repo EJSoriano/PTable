@@ -1,0 +1,185 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Feb 24, 2017, 3:13:12 PM
+    Author     : TheDude
+*/
+
+* {
+    white-space: nowrap;
+}
+body{
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: auto;
+}
+header{
+    background-color: #bf837e;
+    margin: 0em;
+    padding: 1em;
+    width: auto;
+}
+
+nav {
+    background-color: #8e4039;
+    text-align: center;
+    padding: 0em;
+    margin: 0em;
+    font-size: 120%;
+    font-weight: bold;
+}
+
+nav ul li {
+    display: inline;
+    margin: 1em;
+}
+.elembutton:hover {
+    border: solid 3pt #d8b35b;
+    background-color: #ffe884;
+    color: black;
+    font-weight: bold;
+}
+
+nav a { text-decoration: none; }
+nav a:visited {
+    color:white;
+}
+
+.navButton{
+    color: white;
+    padding: 0.5em 0.5em 1em 0.5em;
+}
+
+.navButton:hover{
+    color: black; 
+    background-color: white;
+    text-decoration: none;
+    border-radius: 0.7em;
+}
+.title{
+    font-size: 400%;
+    font-weight: bold;
+    color: white;;
+}
+
+.reportTable{
+    margin: 0 auto !important;
+}
+
+.selected{
+    background-color: white;
+    padding: 0.5em 0.5em 1em 0.5em;
+    border: solid 3px white;
+    border-radius: 0.7em;
+}
+
+.adminForm{
+    max-width: 60%;
+    padding: 2em;
+    margin: 2em auto;
+    background-color: #7f825f;
+    border: solid 3pt darkgray;
+    position: relative;
+    min-height: 50%;
+}
+.field{
+    float: left;
+    margin: 1em;
+    color: white;
+}
+
+.loadField{
+    margin: 0.5em;
+    text-align: center;
+}
+
+.editButtons{
+    width: 100%;
+    position: absolute;
+    bottom: 1em;
+    text-align: center;
+}
+
+.visible {
+    width: 4em;
+    height: 4em;
+    border: 1px solid black;
+    display: inline-block;
+    background-color: #7f4343;
+    padding: 2px;
+    padding-left: 4px;
+    text-align: center;
+    line-height: 10px;
+    margin: 0 2px;
+    vertical-align: top;
+    color: white;
+}
+
+.invisible {
+    width: 4em;
+    height: 4em;
+    padding: 2px;
+    padding-left: 4px;
+    display: inline-block;
+    text-align: left;
+    line-height: 10px;
+    margin: 0 2px;
+}
+
+.Metalloid {
+    background-color: #75888e;
+    color: white;
+}
+
+.Nonmetal {
+    background-color: #a89681;
+    color: white;
+}
+
+.Halogen {
+    background-color: #7f6262;
+}
+
+.Nobel {
+    background-color: #6d6a52;
+}
+
+.Metal {
+    background-color: #465968;
+}
+
+.Transactinide {
+    background-color: #ad826b;
+}
+
+.Lanthanide {
+    background-color: #80716a;
+}
+
+.Actinide {
+    background-color: #7f825f;
+}
+
+.rows {
+    height: 4.2em;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+table {
+    margin: 0 auto;
+}
+
+.atomText {
+    line-height: 20px;
+}
+
+.atomName {
+    text-transform: capitalize;
+}
+
+

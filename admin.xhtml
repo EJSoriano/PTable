@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Admin page</title>
+        <link rel="stylesheet" href="./style.css" />
+        <link rel="icon" type="image/gif" href="./images/493logo-proto.gif"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <header>
+            <p class="text-center title">The Periodic Table</p>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <h:link value="Periodic Table" outcome="index" class="pull-center navButton"></h:link>
+                </li>
+                <li>
+                    <h:link value="Element Report" outcome="report" class="pull-center navButton"></h:link>
+                </li>
+                <li class="selected">
+                    Update Elements
+                </li>
+            </ul>
+        </nav>
+        <b:container class="adminForm">
+            <b:form>
+                <div class="loadField">
+                    <h:selectOneMenu value="#{functionalityBean.selectedElemName}">
+                        <f:selectItems value="#{dbconnectionBean.elementNames}" var="item" itemValue="#{item}"></f:selectItems>
+                    </h:selectOneMenu>
+                    <b:commandButton value="Load Element" action="#{functionalityBean.loadElement}"></b:commandButton>
+                </div>
+                <div class="field">
+                    <h:outputText value="Element Name"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubName}"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Atomic Symbol"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubSymbol}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Atomic Number"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubNum}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Series"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubSeries}" size="7"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Mass (g/mol)"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubMass}" size="6"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Density (g/mL"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubDensity}" size="6"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Group"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubGroup}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Period"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubPeriod}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Physical State at 25C"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubState}" size="5"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Valences"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubValence}" size="5"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Election Configuration"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubConfig}" size="5"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="X Coordinate"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubXCoord}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Y Coordinate"></h:outputText>
+                    <b:inputText value="#{functionalityBean.elemsubYCoord}" size="3"></b:inputText>
+                </div>
+                <div class="editButtons">
+                    <b:commandButton value="Insert Element" action="#{functionalityBean.insertElement}"></b:commandButton>
+                    <b:commandButton value="Update Element" action="#{functionalityBean.updateElement}"></b:commandButton>
+                    <b:commandButton value="Delete Element" action="#{functionalityBean.deleteElement}"></b:commandButton>
+                </div>
+            </b:form>
+        </b:container>
+
+    </h:body>
+</html>
