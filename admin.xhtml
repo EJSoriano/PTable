@@ -36,6 +36,9 @@ and open the template in the editor.
         </nav>
         <b:container class="adminForm">
             <b:form>
+                <b:commandButton value="Element Form" action="admin.xhtml"></b:commandButton>
+                <b:commandButton value="Isotope Form" action="isotopeadmin.xhtml"></b:commandButton>
+
                 <div class="loadField">
                     <h:selectOneMenu value="#{functionalityBean.selectedElemName}">
                         <f:selectItems value="#{dbconnectionBean.elementNames}" var="item" itemValue="#{item}"></f:selectItems>
