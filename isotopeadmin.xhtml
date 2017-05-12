@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Isotope admin page</title>
+        <link rel="stylesheet" href="./style.css" />
+        <link rel="icon" type="image/gif" href="./images/493logo-proto.gif"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <header>
+            <p class="text-center title">The Periodic Table</p>
+        </header>
+        <nav>
+            <ul>
+                <li>
+                    <h:link value="Periodic Table" outcome="index" class="pull-center navButton"></h:link>
+                </li>
+                <li>
+                    <h:link value="Element Report" outcome="report" class="pull-center navButton"></h:link>
+                </li>
+                <li class="selected">
+                    Update Elements
+                </li>
+            </ul>
+        </nav>
+        <b:container class="adminForm">
+            <b:form>
+                <b:commandButton value="Element Form" action="admin.xhtml"></b:commandButton>
+                <b:commandButton value="Isotope Form" action="isotopeadmin.xhtml"></b:commandButton>
+
+                <div class="loadField">
+                    <h:selectOneMenu value="#{functionalityBean.selectedIsotopeName}">
+                        <f:selectItems value="#{dbconnectionBean.isotopeNames}" var="item" itemValue="#{item}"></f:selectItems>
+                    </h:selectOneMenu>
+                    <b:commandButton value="Load Isotope" action="#{functionalityBean.loadIsotope}"></b:commandButton>
+                </div>
+                <div class="field">
+                    <h:outputText value="Isotope Symbol"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeSymbol}"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Isotope Name"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeName}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Isotope Number"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeNumber}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Parent Atom Number"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeAtomNum}" size="3"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Mass"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeMass}" size="7"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Composition"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeComposition}" size="6"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Weight"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeWeight}" size="6"></b:inputText>
+                </div>
+                <div class="field">
+                    <h:outputText value="Abundance"></h:outputText>
+                    <b:inputText value="#{functionalityBean.isotopeAbundance}" size="3"></b:inputText>
+                </div>
+
+                <div class="editButtons">
+                    <b:commandButton value="Insert Isotope" action="#{functionalityBean.insertIsotope}"></b:commandButton>
+                    <b:commandButton value="Update Isotope" action="#{functionalityBean.updateIsotope}"></b:commandButton>
+                    <b:commandButton value="Delete Isotope" action="#{functionalityBean.deleteIsotope}"></b:commandButton>
+                </div>
+            </b:form>
+        </b:container>
+
+    </h:body>
+</html>
